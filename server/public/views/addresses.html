@@ -1,0 +1,10 @@
+<div class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Select User</label>
+        <div class="col-sm-6">
+            <select class="form-control" ng-model="user" ng-change="addresses(user)" ng-options="user as user.name for user in data.users"></select>
+        </div>
+    </div>
+
+    <p>{{data.addresses}}</p>
+</div>
