@@ -1,4 +1,5 @@
 <div class="form-horizontal">
+
     <div class="form-group">
         <label class="col-sm-2 control-label">Select User</label>
         <div class="col-sm-6">
@@ -6,5 +7,13 @@
         </div>
     </div>
 
-    <p>{{data.addresses}}</p>
+</div>
+
+<div ng-show="data.addressLookupBoolean">
+    <address ng-repeat="user in data.addresses" class="panel panel-primary">
+        <div class="panel-heading">{{user.address_type}}</div>
+        <div class="panel-body">{{user.address_street}}<br>
+        {{user.address_city}}, {{user.address_state}} {{user.address_zip}}
+            <hr><span>added {{user.date_added | date:'medium'}}</span>
+    </address>
 </div>

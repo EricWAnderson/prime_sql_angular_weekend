@@ -5,3 +5,41 @@
 .spacer {
     height: 20px;
 }
+
+address {
+    display: inline-block;
+    width: 250px;
+    margin: 10px;
+}
+
+span {
+    font-size: 10px;
+    color: #444;
+}
+
+hr {
+    margin-top: 10px;
+    margin-bottom: 2px;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.orders:nth-child(even) {
+    background-color: #eee;
+}
+
+li {
+    display: inline-block;
+    width: 20%;
+    text-align: center;
+}
+
+.orderNumber {
+    width: 5%;
+}
+
+.orderAmt {
+    width: 12%;
+}

@@ -12,9 +12,9 @@ app.config(['$routeProvider', function($routeProvider){
        });
 }]);
 
-app.controller('mainController', ['$scope', '$location', 'addressService', function($scope, $location, addressService){
+app.controller('mainController', ['$scope', '$location', 'databaseService', function($scope, $location, databaseService){
     $scope.hello = 'hello world';
-    $scope.data = addressService.data;
+    $scope.data = databaseService.data;
 
     //used for nav buttons active class
     $scope.isActive = function (viewLocation) {
@@ -22,10 +22,11 @@ app.controller('mainController', ['$scope', '$location', 'addressService', funct
     };
 
     //used for addresses dropdown
-    addressService.users();
+    databaseService.users();
 
 
-    $scope.addresses = addressService.addresses;
+    $scope.addresses = databaseService.addresses;
+    $scope.orderLookup = databaseService.orderLookup;
 
     $scope.selectedUser = null;
 
@@ -33,11 +34,17 @@ app.controller('mainController', ['$scope', '$location', 'addressService', funct
 
 }]);
 
-app.controller('addressesController', ['$scope', function($scope){}]);
-app.controller('ordersController', ['$scope', function($scope){}]);
+app.controller('addressesController', ['$scope', 'databaseService', function($scope, databaseService){
+    databaseService.data.orderLookupBoolean = false;
+}]);
+app.controller('ordersController', ['$scope', 'databaseService', function($scope, databaseService){
+    databaseService.data.addressLookupBoolean = false;
+}]);
 
-app.factory('addressService', ['$http', function($http){
+app.factory('databaseService', ['$http', function($http){
     var data = {};
+    data.orderLookupBoolean = false;
+    data.addressLookupBoolean = false;
 
     var users = function(){
         $http.get('/user').then(function(response){
@@ -52,12 +59,30 @@ app.factory('addressService', ['$http', function($http){
         console.log('hit the addresses function', id);
 
         $http.get('/user/' + id).then(function(response){
+            data.addressLookupBoolean = true;
             data.addresses = response.data;
-            console.log(data.addresses);
+        })
+    };
+
+    var orderLookup = function(user, dateStart, dateEnd){
+        var id = user.id;
+
+        console.log('hit the orderLookup function', id);
+
+        $http.get('/user/orderLookup/' + id + '/' + dateStart + '/' + dateEnd).then(function(response){
+            data.orderLookupBoolean = true;
+            data.orderLookup = response.data;
+
+            //calculate order total
+            data.orderTotal = 0;
+            for(var i = 0; i<data.orderLookup.length; i++){
+                data.orderTotal += parseFloat(data.orderLookup[i].amount);
+            }
         })
     };
 
     return {
+        orderLookup: orderLookup,
         addresses: addresses,
         users: users,
         data: data
