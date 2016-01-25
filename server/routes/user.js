@@ -31,7 +31,7 @@ router.get('/:id', function(request, response){
     var id = request.params.id;
 
     pg.connect(connectionString, function(err, client, done){
-        //handle erros
+        //handle errors
         if(err){
             console.log(err);
         }

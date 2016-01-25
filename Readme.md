@@ -1,7 +1,4 @@
-#current status: view #1 is complete
-
-
-# SQL-Angular-Routing-Weekend
+# SQL-Angular-Routing-Weekend Assignment
 
 #Address and Order Viewer Application
 

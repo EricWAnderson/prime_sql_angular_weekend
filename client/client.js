@@ -13,7 +13,7 @@ app.config(['$routeProvider', function($routeProvider){
 }]);
 
 app.controller('mainController', ['$scope', '$location', 'databaseService', function($scope, $location, databaseService){
-    $scope.hello = 'hello world';
+    //sync databaseService data object to $scope
     $scope.data = databaseService.data;
 
     //used for nav buttons active class
@@ -21,26 +21,27 @@ app.controller('mainController', ['$scope', '$location', 'databaseService', func
         return viewLocation === $location.path();
     };
 
-    //used for addresses dropdown
+    //used to obtain users for addresses dropdown
     databaseService.users();
 
-
+    //functions to call when user is selected, on either the addresses page or the orderLookup page
     $scope.addresses = databaseService.addresses;
     $scope.orderLookup = databaseService.orderLookup;
 
     $scope.selectedUser = null;
 
-    //used for user selection
-
 }]);
 
 app.controller('addressesController', ['$scope', 'databaseService', function($scope, databaseService){
+    //reset the orderLookup view in case it is viewed again
     databaseService.data.orderLookupBoolean = false;
 }]);
 app.controller('ordersController', ['$scope', 'databaseService', function($scope, databaseService){
+    //reset the addressLookup view in case it is viewed again
     databaseService.data.addressLookupBoolean = false;
 }]);
 
+//Service that makes http calls to node/postgres
 app.factory('databaseService', ['$http', function($http){
     var data = {};
     data.orderLookupBoolean = false;
@@ -49,14 +50,11 @@ app.factory('databaseService', ['$http', function($http){
     var users = function(){
         $http.get('/user').then(function(response){
             data.users = response.data;
-            console.log(data.users);
         })
     };
 
     var addresses = function(user){
         var id = user.id;
-
-        console.log('hit the addresses function', id);
 
         $http.get('/user/' + id).then(function(response){
             data.addressLookupBoolean = true;
@@ -67,8 +65,6 @@ app.factory('databaseService', ['$http', function($http){
     var orderLookup = function(user, dateStart, dateEnd){
         var id = user.id;
 
-        console.log('hit the orderLookup function', id);
-
         $http.get('/user/orderLookup/' + id + '/' + dateStart + '/' + dateEnd).then(function(response){
             data.orderLookupBoolean = true;
             data.orderLookup = response.data;
@@ -78,6 +74,7 @@ app.factory('databaseService', ['$http', function($http){
             for(var i = 0; i<data.orderLookup.length; i++){
                 data.orderTotal += parseFloat(data.orderLookup[i].amount);
             }
+            data.orderTotal = data.orderTotal.toFixed(2);
         })
     };
 

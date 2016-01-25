@@ -13,13 +13,12 @@
 </head>
 <body ng-controller="mainController">
 
-<div ng-include src="'views/header.html'"></div>
+    <div ng-include src="'views/header.html'"></div>
 
-<div class="spacer"></div>
+    <div class="spacer"></div>
+    <div ng-view></div>
 
-<div ng-view></div>
-
-<div ng-include src="'views/footer.html'"></div>
+    <div ng-include src="'views/footer.html'"></div>
 
 </body>
 </html>
